@@ -9,7 +9,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFiles", "SolutionFiles", "{822C4AAE-A1B1-4601-8E9D-E2455F4237B2}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
-		.github\main.yml = .github\main.yml
+		.github\workflows\main.yml = .github\workflows\main.yml
 		README.md = README.md
 	EndProjectSection
 EndProject
