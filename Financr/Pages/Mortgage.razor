@@ -55,9 +55,10 @@
     private double ads;
     private double total;
 
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
         Calculate();
+        return Task.CompletedTask;
     }
 
     private void Calculate()
