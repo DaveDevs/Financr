@@ -1,0 +1,105 @@
+﻿@page "/mortgage"
+@using Microsoft.AspNetCore.Components
+@using System.Globalization
+
+<PageTitle>Mortgage Calc</PageTitle>
+
+<MudCard>
+    <MudCardContent>
+        <MudText>This tool is designed to help roughly calculate buying a house in Scotland, taking into account both LBTT and ADS.</MudText>
+        @*<MudText Typo="Typo.body2"></MudText>*@
+    </MudCardContent>
+    <MudCardContent>
+        <MudStack Row="true">
+            <MudNumericField Format="N2" Label="Purchase Price" Culture="@enGb" T="double" @bind-Value="purchasePrice" HelperText="@purchasePrice.ToString()"/>
+            <MudNumericField Format="N2" Label="Deposit" Culture="@enGb" T="double" @bind-Value="deposit" HelperText="@purchasePrice.ToString()"/>
+            <MudNumericField Format="N2" Label="Mortgage rate" Culture="@enGb" T="double" @bind-Value="interestRate"/>
+            <MudNumericField Label="Mortage years" @bind-Value="years"/>
+        </MudStack>
+        <MudCardActions>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="Calculate">Calculate</MudButton>
+        </MudCardActions>
+    </MudCardContent>
+</MudCard>
+
+@if (total != 0)
+{
+    <MudCard>
+        <MudCardContent>
+            <MudText>Breakdown</MudText>
+        </MudCardContent>
+        <MudCardContent>
+            <hr />
+            <p>Purchase price: £@purchasePrice</p>
+            <p>Deposit: £@deposit</p>
+            <p>LBTT: £@lbtt</p>
+            <p>ADS: £@ads</p>
+            <br />
+            <p>Total purchase price: £@total</p>
+            <p>Mortgage required: £@(purchasePrice - deposit)</p>
+            <p>Mortgage payments: £@string.Format("{0:0.00}", MonthlyMortgagePayments((purchasePrice - deposit), interestRate, years)) per month</p>
+            <p>Cash required (with ADS): £@(lbtt + ads + deposit) (£@deposit + £@(lbtt + ads))</p>
+            <p>Cash required (no ADS): £@(lbtt + deposit) (£@deposit + £@(lbtt))</p>
+        </MudCardContent>
+    </MudCard>
+}
+
+@code {
+    public CultureInfo enGb = CultureInfo.GetCultureInfo("en-GB");
+    private double purchasePrice = 100000;
+    private double deposit = 15000;
+    private double interestRate = 4.2;
+    private int years = 25;
+
+    private double lbtt;
+    private double ads;
+    private double total;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Calculate();
+    }
+
+    private void Calculate()
+    {
+        lbtt = 0;
+        ads = 0;
+        total = 0;
+
+        if (purchasePrice <= 40000)
+        {
+            total = purchasePrice;
+            return;
+        }
+
+        if (purchasePrice > 145000)
+        {
+            lbtt += (Math.Min(purchasePrice, 250000) - 145000) / 100 * 2;
+        }
+        if (purchasePrice > 250000)
+        {
+            lbtt += (Math.Min(purchasePrice, 325000) - 250000) / 100 * 5;
+        }
+        if (purchasePrice > 325000)
+        {
+            lbtt += (Math.Min(purchasePrice, 750000) - 325000) / 100 * 10;
+        }
+        if (purchasePrice > 750000)
+        {
+            lbtt += (purchasePrice - 750000) / 100 * 12;
+        }
+
+        ads = purchasePrice / 100 * 6;
+
+        total = purchasePrice + lbtt + ads;
+    }
+
+    private double MonthlyMortgagePayments(double amount, double interestRate, int years)
+    {
+        var p = amount;
+        var i = interestRate / 100 / 12;
+        var n = years * 12;
+
+        return p * (i * Math.Pow(1 + i, n)) / ((Math.Pow(1 + i, n) - 1));
+    }
+}
