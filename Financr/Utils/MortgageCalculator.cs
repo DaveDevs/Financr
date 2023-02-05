@@ -16,6 +16,7 @@ namespace Financr.Utils
         public decimal Lbtt { get; set; }
         public decimal Ads { get; set; }
         public decimal Total { get; set; }
+        public AmortizationSchedule AmortizationSchedule { get; set; }
 
         public AmortizationSchedule CalculateAmortization()
         {
@@ -74,6 +75,8 @@ namespace Financr.Utils
             this.Ads = this.PurchasePrice / 100 * 6;
 
             this.Total = this.PurchasePrice + this.Lbtt + this.Ads;
+
+            AmortizationSchedule = this.CalculateAmortization();
         }
 
         private void CalculateLbtt()

@@ -43,7 +43,16 @@
     </MudCardContent>
 </MudCard>
 
-<MudTable Items="@MortgageCalc.CalculateAmortization().YearlyStatements" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+<MudCard>
+    <MudCardContent>
+        <MudText>Amortization</MudText>
+    </MudCardContent>
+    <MudCardContent>
+        <MudChart ChartType="ChartType.Line" ChartSeries="@Series" Width="100%" Height="350px"></MudChart>
+    </MudCardContent>
+</MudCard>
+
+<MudTable Items="@MortgageCalc.AmortizationSchedule.YearlyStatements" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
     <HeaderContent>
         <MudTh>Year</MudTh>
         <MudTh>Start Balance</MudTh>
@@ -72,4 +81,11 @@
         MortgageCalc.Calculate();
         return Task.CompletedTask;
     }
+
+    public List<ChartSeries> Series => new List<ChartSeries>()
+    {
+        new ChartSeries() { Name = "Balance", Data = 
+            Array.ConvertAll(this.MortgageCalc.AmortizationSchedule.YearlyStatements.Select(x => x.EndingBalance).ToArray(), x => (double)x)
+        },
+    };
 }
