@@ -7,32 +7,34 @@
 
 <PageTitle>Mortgage Calc</PageTitle>
 
-<MudCard>
+<MudCard class="ma-2">
     <MudCardContent>
         <MudText>This tool is designed to help roughly calculate buying a house in Scotland, taking into account both LBTT and ADS.</MudText>
         @*<MudText Typo="Typo.body2"></MudText>*@
     </MudCardContent>
     <MudCardContent>
         <MudStack Row="true">
-            <MudNumericField Format="N2" Label="Purchase Price" Culture="@enGb" T="decimal" @bind-Value="MortgageCalc.PurchasePrice" HelperText="@MortgageCalc.PurchasePrice.ToString()" />
-            <MudNumericField Format="N2" Label="Deposit" Culture="@enGb" T="decimal" @bind-Value="MortgageCalc.Deposit" HelperText="@MortgageCalc.PurchasePrice.ToString()" />
-            <MudNumericField Format="N2" Label="Mortgage rate" Culture="@enGb" T="decimal" @bind-Value="MortgageCalc.InterestRate" />
-            <MudNumericField Label="Mortage years" @bind-Value="MortgageCalc.Years" />
+            <MudNumericField Label="Purchase Price" Format="N2" Culture="@enGb" T="decimal" @bind-Value="MortgageCalc.PurchasePrice" HelperText="@MortgageCalc.PurchasePrice.ToString()" />
+            <MudNumericField Label="Deposit" Format="N2" Culture="@enGb" T="decimal" @bind-Value="MortgageCalc.Deposit" HelperText="@MortgageCalc.PurchasePrice.ToString()" />
+            <MudNumericField  Label="Rate" Format="N2" Culture="@enGb" T="decimal" @bind-Value="MortgageCalc.InterestRate" />
+            <MudNumericField Label="Years" @bind-Value="MortgageCalc.Years" />
         </MudStack>
     </MudCardContent>
 </MudCard>
 
-<MudCard>
+<MudCard class="ma-2">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Breakdown</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
     <MudCardContent>
-        <MudText>Breakdown</MudText>
-    </MudCardContent>
-    <MudCardContent>
-        <hr />
+        <hr/>
         <p>Purchase price: £@MortgageCalc.PurchasePrice</p>
         <p>Deposit: £@MortgageCalc.Deposit</p>
         <p>LBTT: £@MortgageCalc.Lbtt</p>
         <p>ADS: £@MortgageCalc.Ads</p>
-        <br />
+        <br/>
         <p>Total purchase price: £@MortgageCalc.Total</p>
         <p>Mortgage required: £@(MortgageCalc.MortgageAmount)</p>
         <p>Mortgage payments: £@string.Format("{0:0.00}", MortgageCalc.MonthlyPayment) per month</p>
@@ -41,21 +43,23 @@
     </MudCardContent>
 </MudCard>
 
-<MudCard>
+<MudCard class="ma-2">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Amortization</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
     <MudCardContent>
-        <MudText>Amortization</MudText>
-    </MudCardContent>
-    <MudCardContent>
-        <MudChart ChartType="ChartType.Line" 
-                  ChartSeries="@MortgageGrapher.Series" 
+        <MudChart ChartType="ChartType.Line"
+                  ChartSeries="@MortgageGrapher.Series"
                   XAxisLabels="@MortgageGrapher.XAxisLabels"
-                  Width="100%" 
+                  Width="100%"
                   Height="350px"
                   ChartOptions="@MortgageGrapher.Options"></MudChart>
     </MudCardContent>
 </MudCard>
 
-<MudTable Items="@MortgageCalc.AmortizationSchedule.YearlyStatements" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+<MudTable class="ma-1" Dense="true" Striped="true" Items="@MortgageCalc.AmortizationSchedule.YearlyStatements" Hover="true" Breakpoint="Breakpoint.None" LoadingProgressColor="Color.Info">
     <HeaderContent>
         <MudTh>Year</MudTh>
         <MudTh>Start Balance</MudTh>
