@@ -13,4 +13,8 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.3.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Financr\Financr.csproj" />
+  </ItemGroup>
+
 </Project>
