@@ -17,35 +17,35 @@ namespace Financr.Utils
         public decimal Ads { get; set; }
         public decimal Total { get; set; }
 
-        public IList<AmortizationSchedule> CalculateAmortization()
+        public AmortizationSchedule CalculateAmortization()
         {
-            var schedules = new List<AmortizationSchedule>();
+            var statements = new List<AmortizationStatement>();
             var monthlyPayment = this.MonthlyMortgagePayments();
-            var previousMonth = new AmortizationSchedule();
+            var previousMonth = new AmortizationStatement();
 
-            previousMonth.Year = 0;
+            previousMonth.Period = 0;
             previousMonth.StartBalance = this.MortgageAmount;
             previousMonth.Interest = this.MortgageAmount * this.MonthlyInterestRate;
             previousMonth.Principal = monthlyPayment - previousMonth.Interest;
             previousMonth.EndingBalance = this.MortgageAmount - previousMonth.Principal;
 
-            schedules.Add(previousMonth);
+            statements.Add(previousMonth);
 
             for (int i = 1; i < this.Months; i++)
             {
-                var currentMonth = new AmortizationSchedule();
+                var currentMonth = new AmortizationStatement();
 
-                currentMonth.Year = i;
+                currentMonth.Period = i;
                 currentMonth.StartBalance = previousMonth.EndingBalance;
                 currentMonth.Interest = previousMonth.EndingBalance * this.MonthlyInterestRate;
                 currentMonth.Principal = monthlyPayment - currentMonth.Interest;
                 currentMonth.EndingBalance = previousMonth.EndingBalance - currentMonth.Principal;
 
-                schedules.Add(currentMonth);
+                statements.Add(currentMonth);
                 previousMonth = currentMonth;
             }
 
-            return schedules;
+            return new AmortizationSchedule(statements);
         }
 
         public decimal MonthlyMortgagePayments()

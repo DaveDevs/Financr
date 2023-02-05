@@ -24,27 +24,41 @@
     </MudCardContent>
 </MudCard>
 
-@if (MortgageCalc.Total != 0)
-{
-    <MudCard>
-        <MudCardContent>
-            <MudText>Breakdown</MudText>
-        </MudCardContent>
-        <MudCardContent>
-            <hr />
-            <p>Purchase price: £@MortgageCalc.PurchasePrice</p>
-            <p>Deposit: £@MortgageCalc.Deposit</p>
-            <p>LBTT: £@MortgageCalc.Lbtt</p>
-            <p>ADS: £@MortgageCalc.Ads</p>
-            <br />
-            <p>Total purchase price: £@MortgageCalc.Total</p>
-            <p>Mortgage required: £@(MortgageCalc.MortgageAmount)</p>
-            <p>Mortgage payments: £@string.Format("{0:0.00}", MortgageCalc.MonthlyMortgagePayments()) per month</p>
-            <p>Cash required (no ADS): £@(MortgageCalc.Lbtt + MortgageCalc.Deposit) (£@MortgageCalc.Deposit + £@(MortgageCalc.Lbtt))</p>
-            <p>Cash required (with ADS): £@(MortgageCalc.Lbtt + MortgageCalc.Ads + MortgageCalc.Deposit) (£@MortgageCalc.Deposit + £@(MortgageCalc.Lbtt + MortgageCalc.Ads))</p>
-        </MudCardContent>
-    </MudCard>
-}
+<MudCard>
+    <MudCardContent>
+        <MudText>Breakdown</MudText>
+    </MudCardContent>
+    <MudCardContent>
+        <hr />
+        <p>Purchase price: £@MortgageCalc.PurchasePrice</p>
+        <p>Deposit: £@MortgageCalc.Deposit</p>
+        <p>LBTT: £@MortgageCalc.Lbtt</p>
+        <p>ADS: £@MortgageCalc.Ads</p>
+        <br />
+        <p>Total purchase price: £@MortgageCalc.Total</p>
+        <p>Mortgage required: £@(MortgageCalc.MortgageAmount)</p>
+        <p>Mortgage payments: £@string.Format("{0:0.00}", MortgageCalc.MonthlyMortgagePayments()) per month</p>
+        <p>Cash required (no ADS): £@(MortgageCalc.Lbtt + MortgageCalc.Deposit) (£@MortgageCalc.Deposit + £@(MortgageCalc.Lbtt))</p>
+        <p>Cash required (with ADS): £@(MortgageCalc.Lbtt + MortgageCalc.Ads + MortgageCalc.Deposit) (£@MortgageCalc.Deposit + £@(MortgageCalc.Lbtt + MortgageCalc.Ads))</p>
+    </MudCardContent>
+</MudCard>
+
+<MudTable Items="@MortgageCalc.CalculateAmortization().YearlyStatements" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+    <HeaderContent>
+        <MudTh>Year</MudTh>
+        <MudTh>Start Balance</MudTh>
+        <MudTh>Interest</MudTh>
+        <MudTh>Principal</MudTh>
+        <MudTh>Ending Balance</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Year">@context.Period</MudTd>
+        <MudTd DataLabel="Start Balance">@AmortizationStatement.FormatDecimal(context.StartBalance)</MudTd>
+        <MudTd DataLabel="Interest">@AmortizationStatement.FormatDecimal(context.Interest)</MudTd>
+        <MudTd DataLabel="Principal">@AmortizationStatement.FormatDecimal(context.Principal)</MudTd>
+        <MudTd DataLabel="Ending Balance">@AmortizationStatement.FormatDecimal(context.EndingBalance)</MudTd>
+    </RowTemplate>
+</MudTable>
 
 @code {
     public CultureInfo enGb = CultureInfo.GetCultureInfo("en-GB");

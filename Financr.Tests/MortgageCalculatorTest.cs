@@ -89,11 +89,16 @@ namespace Financr.Tests
             mortgageCalc.Years = 25;
 
             // A
-            var payment = mortgageCalc.CalculateAmortization();
+            var schedule = mortgageCalc.CalculateAmortization();
 
             // A
-            payment.Count.Should().Be(mortgageCalc.Years * 12);
-            payment.Last().EndingBalance.Should().BeApproximately(0m, 0.0001m);
+            schedule.MonthlyStatements.Count.Should().Be(mortgageCalc.Years * 12);
+            schedule.YearlyStatements.Count.Should().Be(mortgageCalc.Years);
+
+            schedule.MonthlyStatements.Last().EndingBalance.Should().BeApproximately(0m, 0.0001m);
+            
+            schedule.YearlyStatements.Last().EndingBalance.Should().BeApproximately(0m, 0.0001m);
+            schedule.YearlyStatements.Last().Interest.Should().BeApproximately(491.03m, 0.02m);
         }
     }
 }
