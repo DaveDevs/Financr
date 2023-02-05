@@ -1,5 +1,6 @@
 ﻿@page "/mortgage"
 @inject MortgageCalculator MortgageCalc
+@inject MortgageGrapher MortgageGrapher
 @using Microsoft.AspNetCore.Components
 @using System.Globalization
 @using Financr.Utils
@@ -45,7 +46,12 @@
         <MudText>Amortization</MudText>
     </MudCardContent>
     <MudCardContent>
-        <MudChart ChartType="ChartType.Line" ChartSeries="@Series" Width="100%" Height="350px"></MudChart>
+        <MudChart ChartType="ChartType.Line" 
+                  ChartSeries="@MortgageGrapher.Series" 
+                  XAxisLabels="@MortgageGrapher.XAxisLabels"
+                  Width="100%" 
+                  Height="350px"
+                  ChartOptions="@MortgageGrapher.Options"></MudChart>
     </MudCardContent>
 </MudCard>
 
@@ -77,11 +83,4 @@
         MortgageCalc.Years = 25;
         return Task.CompletedTask;
     }
-
-    public List<ChartSeries> Series => new List<ChartSeries>()
-    {
-        new ChartSeries() { Name = "Balance", Data = 
-            Array.ConvertAll(this.MortgageCalc.AmortizationSchedule.YearlyStatements.Select(x => x.EndingBalance).ToArray(), x => (double)x)
-        },
-    };
 }
