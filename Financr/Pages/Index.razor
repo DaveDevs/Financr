@@ -9,16 +9,20 @@
 
 <MudCard class="ma-2">
     <MudCardContent>
-        <MudText>This tool is designed to help roughly calculate buying a house in Scotland, taking into account both LBTT and ADS.</MudText>
-        @*<MudText Typo="Typo.body2"></MudText>*@
-    </MudCardContent>
-    <MudCardContent>
-        <MudStack Row="true">
-            <MudNumericField Label="Purchase Price" Format="N2" Culture="@enGb" T="decimal" @bind-Value="MortgageCalc.PurchasePrice" HelperText="@MortgageCalc.PurchasePrice.ToString()" />
-            <MudNumericField Label="Deposit" Format="N2" Culture="@enGb" T="decimal" @bind-Value="MortgageCalc.Deposit" HelperText="@MortgageCalc.PurchasePrice.ToString()" />
-            <MudNumericField  Label="Rate" Format="N2" Culture="@enGb" T="decimal" @bind-Value="MortgageCalc.InterestRate" />
-            <MudNumericField Label="Years" @bind-Value="MortgageCalc.Years" />
-        </MudStack>
+        <MudGrid>
+            <MudItem xs=6 sm=3>
+                <MudNumericField Label="Purchase Price" Format="N2" Culture="@enGb" T="decimal" @bind-Value="MortgageCalc.PurchasePrice" HelperText="@MortgageCalc.PurchasePrice.ToString()"/>
+            </MudItem>
+            <MudItem xs=6 sm=3>
+                <MudNumericField Label="Deposit" Format="N2" Culture="@enGb" T="decimal" @bind-Value="MortgageCalc.Deposit" HelperText="@MortgageCalc.PurchasePrice.ToString()"/>
+            </MudItem>
+            <MudItem xs=6 sm=3>
+                <MudNumericField Label="Rate" Format="N2" Culture="@enGb" T="decimal" @bind-Value="MortgageCalc.InterestRate"/>
+            </MudItem>
+            <MudItem xs=6 sm=3>
+                <MudNumericField Label="Years" @bind-Value="MortgageCalc.Years"/>
+            </MudItem>
+        </MudGrid>
     </MudCardContent>
 </MudCard>
 
@@ -29,17 +33,33 @@
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
-        <hr/>
-        <p>Purchase price: £@MortgageCalc.PurchasePrice</p>
-        <p>Deposit: £@MortgageCalc.Deposit</p>
-        <p>LBTT: £@MortgageCalc.Lbtt</p>
-        <p>ADS: £@MortgageCalc.Ads</p>
-        <br/>
-        <p>Total purchase price: £@MortgageCalc.Total</p>
-        <p>Mortgage required: £@(MortgageCalc.MortgageAmount)</p>
-        <p>Mortgage payments: £@string.Format("{0:0.00}", MortgageCalc.MonthlyPayment) per month</p>
-        <p>Cash required (no ADS): £@(MortgageCalc.Lbtt + MortgageCalc.Deposit) (£@MortgageCalc.Deposit + £@(MortgageCalc.Lbtt))</p>
-        <p>Cash required (with ADS): £@(MortgageCalc.Lbtt + MortgageCalc.Ads + MortgageCalc.Deposit) (£@MortgageCalc.Deposit + £@(MortgageCalc.Lbtt + MortgageCalc.Ads))</p>
+        <MudGrid>
+            <MudItem xs=6 sm=3>
+                <MudField Class="ma-1" Label="LBTT" Variant="Variant.Filled">£@MortgageCalc.Lbtt</MudField>
+            </MudItem>
+            <MudItem xs=6 sm=3>
+                <MudField Class="ma-1" Label="ADS" Variant="Variant.Filled">£@MortgageCalc.Ads</MudField>
+            </MudItem>
+        </MudGrid>
+        <MudGrid>
+            <MudItem xs=6 sm=3>
+                <MudField Class="ma-1" Label="Total price" Variant="Variant.Filled">£@MortgageCalc.Total</MudField>
+            </MudItem>
+            <MudItem xs=6 sm=3>
+                <MudField Class="ma-1" Label="Mortgage required" Variant="Variant.Filled">£@(MortgageCalc.MortgageAmount)</MudField>
+            </MudItem>
+            <MudItem xs=6 sm=3>
+                <MudField Class="ma-1" Label="Mortgage payments" Variant="Variant.Filled">£@string.Format("{0:0.00}", MortgageCalc.MonthlyPayment) p/m</MudField>
+            </MudItem>
+        </MudGrid>
+        <MudGrid>
+            <MudItem xs=12 sm=6>
+                <MudField Class="ma-1" Label="Cash required (no ADS)" Variant="Variant.Filled">£@(MortgageCalc.Lbtt + MortgageCalc.Deposit) (£@MortgageCalc.Deposit + £@(MortgageCalc.Lbtt))</MudField>
+            </MudItem>
+            <MudItem xs=12 sm=6>
+                <MudField Class="ma-1" Label="Cash required (with ADS)" Variant="Variant.Filled">£@(MortgageCalc.Lbtt + MortgageCalc.Ads + MortgageCalc.Deposit) (£@MortgageCalc.Deposit + £@(MortgageCalc.Lbtt + MortgageCalc.Ads))</MudField>
+            </MudItem>
+        </MudGrid>
     </MudCardContent>
 </MudCard>
 
