@@ -13,21 +13,21 @@ namespace Financr.Utils
         public decimal MonthlyInterestRate => this.PercentageRate / 12;
         public int Years { get; set; }
         public int Months => this.Years * 12;
-        public decimal Lbtt { get; set; }
-        public decimal Ads { get; set; }
-        public decimal Total { get; set; }
-        public AmortizationSchedule AmortizationSchedule { get; set; }
+        public decimal Lbtt => CalculateLbtt();
+        public decimal Ads => this.PurchasePrice / 100 * 6;
+        public decimal Total => this.CalculateTotal();
+        public AmortizationSchedule AmortizationSchedule => this.CalculateAmortization();
+        public decimal MonthlyPayment => this.MonthlyMortgagePayments();
 
         public AmortizationSchedule CalculateAmortization()
         {
             var statements = new List<AmortizationStatement>();
-            var monthlyPayment = this.MonthlyMortgagePayments();
             var previousMonth = new AmortizationStatement();
 
             previousMonth.Period = 0;
             previousMonth.StartBalance = this.MortgageAmount;
             previousMonth.Interest = this.MortgageAmount * this.MonthlyInterestRate;
-            previousMonth.Principal = monthlyPayment - previousMonth.Interest;
+            previousMonth.Principal = this.MonthlyPayment - previousMonth.Interest;
             previousMonth.EndingBalance = this.MortgageAmount - previousMonth.Principal;
 
             statements.Add(previousMonth);
@@ -39,7 +39,7 @@ namespace Financr.Utils
                 currentMonth.Period = i;
                 currentMonth.StartBalance = previousMonth.EndingBalance;
                 currentMonth.Interest = previousMonth.EndingBalance * this.MonthlyInterestRate;
-                currentMonth.Principal = monthlyPayment - currentMonth.Interest;
+                currentMonth.Principal = this.MonthlyPayment - currentMonth.Interest;
                 currentMonth.EndingBalance = previousMonth.EndingBalance - currentMonth.Principal;
 
                 statements.Add(currentMonth);
@@ -49,7 +49,7 @@ namespace Financr.Utils
             return new AmortizationSchedule(statements);
         }
 
-        public decimal MonthlyMortgagePayments()
+        private decimal MonthlyMortgagePayments()
         {
             var p = (double)this.MortgageAmount;
             var i = (double)this.InterestRate / 100 / 12;
@@ -58,48 +58,45 @@ namespace Financr.Utils
             return (decimal)(p * (i * Math.Pow(1 + i, n)) / ((Math.Pow(1 + i, n) - 1)));
         }
 
-        public void Calculate()
+        private decimal CalculateTotal()
         {
-            this.Lbtt = 0;
-            this.Ads = 0;
-            this.Total = 0;
+            var total = 0m;
 
             if (this.PurchasePrice <= 40000)
             {
-                this.Total = this.PurchasePrice;
-                return;
+                total = this.PurchasePrice;
+                return total;
             }
 
-            CalculateLbtt();
+            total = this.PurchasePrice + this.Lbtt + this.Ads;
 
-            this.Ads = this.PurchasePrice / 100 * 6;
-
-            this.Total = this.PurchasePrice + this.Lbtt + this.Ads;
-
-            AmortizationSchedule = this.CalculateAmortization();
+            return total;
         }
 
-        private void CalculateLbtt()
+        private decimal CalculateLbtt()
         {
+            var lbbt = 0m;
             if (this.PurchasePrice > 145000)
             {
-                this.Lbtt += (Math.Min(this.PurchasePrice, 250000) - 145000) / 100 * 2;
+                lbbt += (Math.Min(this.PurchasePrice, 250000) - 145000) / 100 * 2;
             }
 
             if (this.PurchasePrice > 250000)
             {
-                this.Lbtt += (Math.Min(this.PurchasePrice, 325000) - 250000) / 100 * 5;
+                lbbt += (Math.Min(this.PurchasePrice, 325000) - 250000) / 100 * 5;
             }
 
             if (this.PurchasePrice > 325000)
             {
-                this.Lbtt += (Math.Min(this.PurchasePrice, 750000) - 325000) / 100 * 10;
+                lbbt += (Math.Min(this.PurchasePrice, 750000) - 325000) / 100 * 10;
             }
 
             if (this.PurchasePrice > 750000)
             {
-                this.Lbtt += (this.PurchasePrice - 750000) / 100 * 12;
+                lbbt += (this.PurchasePrice - 750000) / 100 * 12;
             }
+
+            return lbbt;
         }
     }
 }

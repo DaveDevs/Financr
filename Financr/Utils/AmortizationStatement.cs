@@ -25,22 +25,22 @@ namespace Financr.Utils
         public AmortizationSchedule(IList<AmortizationStatement> statements)
         {
             this.MonthlyStatements = statements;
-            this.YearlyStatements = new List<AmortizationStatement>();
             this.BuildYearlyStatement();
         }
 
         public IList<AmortizationStatement> MonthlyStatements { get; set; }
 
-        public IList<AmortizationStatement> YearlyStatements { get; set; }
+        public IList<AmortizationStatement> YearlyStatements => this.BuildYearlyStatement();
 
-        private void BuildYearlyStatement()
+        private List<AmortizationStatement> BuildYearlyStatement()
         {
             var years = MonthlyStatements.Count / 12;
+            var yearlyStatements = new List<AmortizationStatement>();
 
             for (int i = 0; i < years; i++)
             {
                 var yearStatements = this.MonthlyStatements.Skip(i*12).Take(12).ToList();
-                this.YearlyStatements.Add(new AmortizationStatement()
+                yearlyStatements.Add(new AmortizationStatement()
                 {
                     Period = i + 1,
                     StartBalance = yearStatements.First().StartBalance,
@@ -49,6 +49,8 @@ namespace Financr.Utils
                     Principal = yearStatements.Sum(x => x.Principal)
                 });
             }
+
+            return yearlyStatements;
         }
     }
 }

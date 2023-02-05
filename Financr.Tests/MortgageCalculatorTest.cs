@@ -18,7 +18,6 @@ namespace Financr.Tests
             mortgageCalc.Years = 25;
 
             // A
-            mortgageCalc.Calculate();
 
             // A
             mortgageCalc.Lbtt.Should().Be(500.00m);
@@ -36,7 +35,6 @@ namespace Financr.Tests
             mortgageCalc.Years = 25;
 
             // A
-            mortgageCalc.Calculate();
 
             // A
             mortgageCalc.Lbtt.Should().Be(5100);
@@ -54,7 +52,6 @@ namespace Financr.Tests
             mortgageCalc.Years = 25;
 
             // A
-            mortgageCalc.Calculate();
 
             // A
             mortgageCalc.Lbtt.Should().Be(24350.00m);
@@ -72,10 +69,9 @@ namespace Financr.Tests
             mortgageCalc.Years = 25;
 
             // A
-            var payment = mortgageCalc.MonthlyMortgagePayments();
 
             // A
-            payment.Should().BeApproximately(2821.91m, 0.01m);
+            mortgageCalc.MonthlyPayment.Should().BeApproximately(2821.91m, 0.01m);
         }
 
         [Test]
