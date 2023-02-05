@@ -5,21 +5,56 @@ namespace Financr.Utils
 
     public class MortgageCalculator
     {
-        public double PurchasePrice { get; set; }
-        public double Deposit { get; set; }
-        public double InterestRate { get; set; }
+        public decimal PurchasePrice { get; set; }
+        public decimal Deposit { get; set; }
+        public decimal MortgageAmount => this.PurchasePrice - Deposit;
+        public decimal InterestRate { get; set; }
+        public decimal PercentageRate => this.InterestRate * 0.01m;
+        public decimal MonthlyInterestRate => this.PercentageRate / 12;
         public int Years { get; set; }
-        public double Lbtt { get; set; }
-        public double Ads { get; set; }
-        public double Total { get; set; }
+        public int Months => this.Years * 12;
+        public decimal Lbtt { get; set; }
+        public decimal Ads { get; set; }
+        public decimal Total { get; set; }
 
-        public double MonthlyMortgagePayments()
+        public IList<AmortizationSchedule> CalculateAmortization()
         {
-            var p = this.PurchasePrice - this.Deposit;
-            var i = this.InterestRate / 100 / 12;
+            var schedules = new List<AmortizationSchedule>();
+            var monthlyPayment = this.MonthlyMortgagePayments();
+            var previousMonth = new AmortizationSchedule();
+
+            previousMonth.Year = 0;
+            previousMonth.StartBalance = this.MortgageAmount;
+            previousMonth.Interest = this.MortgageAmount * this.MonthlyInterestRate;
+            previousMonth.Principal = monthlyPayment - previousMonth.Interest;
+            previousMonth.EndingBalance = this.MortgageAmount - previousMonth.Principal;
+
+            schedules.Add(previousMonth);
+
+            for (int i = 1; i < this.Months; i++)
+            {
+                var currentMonth = new AmortizationSchedule();
+
+                currentMonth.Year = i;
+                currentMonth.StartBalance = previousMonth.EndingBalance;
+                currentMonth.Interest = previousMonth.EndingBalance * this.MonthlyInterestRate;
+                currentMonth.Principal = monthlyPayment - currentMonth.Interest;
+                currentMonth.EndingBalance = previousMonth.EndingBalance - currentMonth.Principal;
+
+                schedules.Add(currentMonth);
+                previousMonth = currentMonth;
+            }
+
+            return schedules;
+        }
+
+        public decimal MonthlyMortgagePayments()
+        {
+            var p = (double)this.MortgageAmount;
+            var i = (double)this.InterestRate / 100 / 12;
             var n = this.Years * 12;
 
-            return p * (i * Math.Pow(1 + i, n)) / ((Math.Pow(1 + i, n) - 1));
+            return (decimal)(p * (i * Math.Pow(1 + i, n)) / ((Math.Pow(1 + i, n) - 1)));
         }
 
         public void Calculate()

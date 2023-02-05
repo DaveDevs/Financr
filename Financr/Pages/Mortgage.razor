@@ -13,9 +13,9 @@
     </MudCardContent>
     <MudCardContent>
         <MudStack Row="true">
-            <MudNumericField Format="N2" Label="Purchase Price" Culture="@enGb" T="double" @bind-Value="MortgageCalc.PurchasePrice" HelperText="@MortgageCalc.PurchasePrice.ToString()" />
-            <MudNumericField Format="N2" Label="Deposit" Culture="@enGb" T="double" @bind-Value="MortgageCalc.Deposit" HelperText="@MortgageCalc.PurchasePrice.ToString()" />
-            <MudNumericField Format="N2" Label="Mortgage rate" Culture="@enGb" T="double" @bind-Value="MortgageCalc.InterestRate" />
+            <MudNumericField Format="N2" Label="Purchase Price" Culture="@enGb" T="decimal" @bind-Value="MortgageCalc.PurchasePrice" HelperText="@MortgageCalc.PurchasePrice.ToString()" />
+            <MudNumericField Format="N2" Label="Deposit" Culture="@enGb" T="decimal" @bind-Value="MortgageCalc.Deposit" HelperText="@MortgageCalc.PurchasePrice.ToString()" />
+            <MudNumericField Format="N2" Label="Mortgage rate" Culture="@enGb" T="decimal" @bind-Value="MortgageCalc.InterestRate" />
             <MudNumericField Label="Mortage years" @bind-Value="MortgageCalc.Years" />
         </MudStack>
         <MudCardActions>
@@ -38,10 +38,10 @@
             <p>ADS: £@MortgageCalc.Ads</p>
             <br />
             <p>Total purchase price: £@MortgageCalc.Total</p>
-            <p>Mortgage required: £@(MortgageCalc.PurchasePrice - MortgageCalc.Deposit)</p>
+            <p>Mortgage required: £@(MortgageCalc.MortgageAmount)</p>
             <p>Mortgage payments: £@string.Format("{0:0.00}", MortgageCalc.MonthlyMortgagePayments()) per month</p>
-            <p>Cash required (with ADS): £@(MortgageCalc.Lbtt + MortgageCalc.Ads + MortgageCalc.Deposit) (£@MortgageCalc.Deposit + £@(MortgageCalc.Lbtt + MortgageCalc.Ads))</p>
             <p>Cash required (no ADS): £@(MortgageCalc.Lbtt + MortgageCalc.Deposit) (£@MortgageCalc.Deposit + £@(MortgageCalc.Lbtt))</p>
+            <p>Cash required (with ADS): £@(MortgageCalc.Lbtt + MortgageCalc.Ads + MortgageCalc.Deposit) (£@MortgageCalc.Deposit + £@(MortgageCalc.Lbtt + MortgageCalc.Ads))</p>
         </MudCardContent>
     </MudCard>
 }
@@ -53,7 +53,7 @@
     {
         MortgageCalc.PurchasePrice = 170_000;
         MortgageCalc.Deposit = 10_000;
-        MortgageCalc.InterestRate= 4.64;
+        MortgageCalc.InterestRate= 4.64m;
         MortgageCalc.Years = 25;
         MortgageCalc.Calculate();
         return Task.CompletedTask;
