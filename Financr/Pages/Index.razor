@@ -1,6 +1,7 @@
 ﻿@page "/"
 @inject LoanCalculator LoanCalc
 @inject LoanGrapher LoanGrapher
+@inject PlotlyGrapher PlotlyGrapher
 @using Microsoft.AspNetCore.Components
 @using System.Globalization
 @using Financr.Utils
@@ -26,7 +27,7 @@
                 <MudNumericField Label="Rate" Min="0" Step="0.01m" Format="N2" Culture="@enGb" T="decimal" @bind-Value="LoanCalc.InterestRate"/>
             </MudItem>
             <MudItem xs=6 md=3>
-                <MudNumericField Label="Years" Min="0" Step="1" Max="50" @bind-Value="LoanCalc.Years"/>
+                <MudNumericField Label="Years" Min="1" Step="1" Max="50" @bind-Value="LoanCalc.Years"/>
             </MudItem>
         </MudGrid>
     </MudCardContent>
@@ -71,12 +72,7 @@
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent Class="pa-0">
-        <MudChart ChartType="ChartType.Line"
-                  ChartSeries="@LoanGrapher.Series"
-                  XAxisLabels="@LoanGrapher.XAxisLabels"
-                  Width="100%"
-                  Style="max-height: 300px"
-                  ChartOptions="@LoanGrapher.Options"></MudChart>
+        <PlotlyChart @bind-Config="PlotlyGrapher.Config" @bind-Layout="PlotlyGrapher.Layout" Data="PlotlyGrapher.Data" @ref="PlotlyGrapher.Chart" />
     </MudCardContent>
 </MudCard>
 
@@ -116,6 +112,14 @@
         LoanCalc.InterestRate= 4.64m;
         LoanCalc.Years = 25;
         LoanCalc.IsMortgage = true;
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        PlotlyGrapher.Chart.Data = PlotlyGrapher.Data;
+        PlotlyGrapher.Chart.React();
+
+        base.OnAfterRender(firstRender);
     }
 
     protected override Task OnInitializedAsync()
