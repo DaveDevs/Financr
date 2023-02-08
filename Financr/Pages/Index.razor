@@ -1,26 +1,32 @@
 ﻿@page "/"
-@inject MortgageCalculator MortgageCalc
-@inject MortgageGrapher MortgageGrapher
+@inject LoanCalculator LoanCalc
+@inject LoanGrapher LoanGrapher
 @using Microsoft.AspNetCore.Components
 @using System.Globalization
 @using Financr.Utils
 
-<PageTitle>Mortgage Calc</PageTitle>
+<PageTitle>Loan Calc</PageTitle>
 
 <MudCard class="ma-2">
     <MudCardContent>
         <MudGrid>
-            <MudItem xs=6 sm=3>
-                <MudNumericField Label="Purchase Price" Min="0" Step="1000" Format="N2" Culture="@enGb" T="decimal" @bind-Value="MortgageCalc.PurchasePrice" HelperText="@MortgageCalc.PurchasePrice.ToString()" />
+            <MudItem xs=6 md=3>
+                <MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="SampleLoan">Loan</MudButton>
+                <MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="SampleMortgage">Mortgage</MudButton>
             </MudItem>
-            <MudItem xs=6 sm=3>
-                <MudNumericField Label="Deposit" Min="0" Step="1000" Format="N2" Culture="@enGb" T="decimal" @bind-Value="MortgageCalc.Deposit" HelperText="@MortgageCalc.Deposit.ToString()" />
+        </MudGrid>
+        <MudGrid>
+            <MudItem xs=6 md=3>
+                <MudNumericField Label="Purchase Price" Min="0" Step="1000" Format="N2" Culture="@enGb" T="decimal" @bind-Value="LoanCalc.PurchasePrice" HelperText="@LoanCalc.PurchasePrice.ToString()"/>
             </MudItem>
-            <MudItem xs=6 sm=3>
-                <MudNumericField Label="Rate" Min="0" Step="0.01m" Format="N2" Culture="@enGb" T="decimal" @bind-Value="MortgageCalc.InterestRate" />
+            <MudItem xs=6 md=3>
+                <MudNumericField Label="Deposit" Min="0" Step="1000" Format="N2" Culture="@enGb" T="decimal" @bind-Value="LoanCalc.Deposit" HelperText="@LoanCalc.Deposit.ToString()"/>
             </MudItem>
-            <MudItem xs=6 sm=3>
-                <MudNumericField Label="Years" Min="0" Step="1" Max="50" @bind-Value="MortgageCalc.Years" />
+            <MudItem xs=6 md=3>
+                <MudNumericField Label="Rate" Min="0" Step="0.01m" Format="N2" Culture="@enGb" T="decimal" @bind-Value="LoanCalc.InterestRate"/>
+            </MudItem>
+            <MudItem xs=6 md=3>
+                <MudNumericField Label="Years" Min="0" Step="1" Max="50" @bind-Value="LoanCalc.Years"/>
             </MudItem>
         </MudGrid>
     </MudCardContent>
@@ -34,30 +40,25 @@
     </MudCardHeader>
     <MudCardContent>
         <MudGrid>
-            <MudItem xs=6 sm=3>
-                <MudField Class="ma-1" Label="LBTT" Variant="Variant.Filled">£@MortgageCalc.Lbtt</MudField>
-            </MudItem>
-            <MudItem xs=6 sm=3>
-                <MudField Class="ma-1" Label="ADS" Variant="Variant.Filled">£@MortgageCalc.Ads</MudField>
-            </MudItem>
+
         </MudGrid>
         <MudGrid>
-            <MudItem xs=6 sm=3>
-                <MudField Class="ma-1" Label="Total price" Variant="Variant.Filled">£@MortgageCalc.Total</MudField>
+            <MudItem xs=6 md=3>
+                <MudField Class="ma-1" Label="LBTT" Variant="Variant.Filled">£@LoanCalc.Lbtt</MudField>
             </MudItem>
-            <MudItem xs=6 sm=3>
-                <MudField Class="ma-1" Label="Mortgage required" Variant="Variant.Filled">£@(MortgageCalc.MortgageAmount)</MudField>
+            <MudItem xs=6 md=3>
+                <MudField Class="ma-1" Label="Total price" Variant="Variant.Filled">£@LoanCalc.Total</MudField>
             </MudItem>
-            <MudItem xs=6 sm=3>
-                <MudField Class="ma-1" Label="Mortgage payments" Variant="Variant.Filled">£@string.Format("{0:0.00}", MortgageCalc.MonthlyPayment) p/m</MudField>
+            <MudItem xs=6 md=3>
+                <MudField Class="ma-1" Label="Finance required" Variant="Variant.Filled">£@(LoanCalc.MortgageAmount)</MudField>
+            </MudItem>
+            <MudItem xs=6 md=3>
+                <MudField Class="ma-1" Label="Payments" Variant="Variant.Filled">£@string.Format("{0:0.00}", LoanCalc.MonthlyPayment) p/m</MudField>
             </MudItem>
         </MudGrid>
         <MudGrid>
             <MudItem xs=12 sm=6>
-                <MudField Class="ma-1" Label="Cash required (no ADS)" Variant="Variant.Filled">£@(MortgageCalc.Lbtt + MortgageCalc.Deposit) (£@MortgageCalc.Deposit + £@(MortgageCalc.Lbtt))</MudField>
-            </MudItem>
-            <MudItem xs=12 sm=6>
-                <MudField Class="ma-1" Label="Cash required (with ADS)" Variant="Variant.Filled">£@(MortgageCalc.Lbtt + MortgageCalc.Ads + MortgageCalc.Deposit) (£@MortgageCalc.Deposit + £@(MortgageCalc.Lbtt + MortgageCalc.Ads))</MudField>
+                <MudField Class="ma-1" Label="Cash required" Variant="Variant.Filled">£@(LoanCalc.Lbtt + LoanCalc.Deposit) (£@LoanCalc.Deposit + £@(LoanCalc.Lbtt))</MudField>
             </MudItem>
         </MudGrid>
     </MudCardContent>
@@ -69,17 +70,17 @@
             <MudText Typo="Typo.h6">Amortization</MudText>
         </CardHeaderContent>
     </MudCardHeader>
-    <MudCardContent>
+    <MudCardContent Class="pa-0">
         <MudChart ChartType="ChartType.Line"
-                  ChartSeries="@MortgageGrapher.Series"
-                  XAxisLabels="@MortgageGrapher.XAxisLabels"
+                  ChartSeries="@LoanGrapher.Series"
+                  XAxisLabels="@LoanGrapher.XAxisLabels"
                   Width="100%"
-                  Height="350px"
-                  ChartOptions="@MortgageGrapher.Options"></MudChart>
+                  Style="max-height: 300px"
+                  ChartOptions="@LoanGrapher.Options"></MudChart>
     </MudCardContent>
 </MudCard>
 
-<MudTable class="ma-1" Dense="true" Striped="true" Items="@MortgageCalc.AmortizationSchedule.YearlyStatements" Hover="true" Breakpoint="Breakpoint.None" LoadingProgressColor="Color.Info">
+<MudTable class="ma-1" Dense="true" Striped="true" Items="@LoanCalc.AmortizationSchedule.YearlyStatements" Hover="true" Breakpoint="Breakpoint.None" LoadingProgressColor="Color.Info">
     <HeaderContent>
         <MudTh>Year</MudTh>
         <MudTh>Start Balance</MudTh>
@@ -99,12 +100,27 @@
 @code {
     public CultureInfo enGb = CultureInfo.GetCultureInfo("en-GB");
 
+    protected void SampleLoan()
+    {
+        LoanCalc.PurchasePrice = 15_000;
+        LoanCalc.Deposit = 0;
+        LoanCalc.InterestRate= 9.75m;
+        LoanCalc.Years = 3;
+        LoanCalc.IsMortgage = false;
+    }
+
+    protected void SampleMortgage()
+    {
+        LoanCalc.PurchasePrice = 170_000;
+        LoanCalc.Deposit = 10_000;
+        LoanCalc.InterestRate= 4.64m;
+        LoanCalc.Years = 25;
+        LoanCalc.IsMortgage = true;
+    }
+
     protected override Task OnInitializedAsync()
     {
-        MortgageCalc.PurchasePrice = 170_000;
-        MortgageCalc.Deposit = 10_000;
-        MortgageCalc.InterestRate= 4.64m;
-        MortgageCalc.Years = 25;
+        this.SampleMortgage();
         return Task.CompletedTask;
     }
 }

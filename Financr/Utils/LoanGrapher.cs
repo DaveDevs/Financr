@@ -3,13 +3,13 @@ using MudBlazor;
 
 namespace Financr.Utils
 {
-    public class MortgageGrapher
+    public class LoanGrapher
     {
-        public MortgageCalculator MortgageCalculator { get; protected set; }
+        public LoanCalculator LoanCalculator { get; protected set; }
 
-        public MortgageGrapher(MortgageCalculator mortgageCalculator)
+        public LoanGrapher(LoanCalculator loanCalculator)
         {
-            MortgageCalculator = mortgageCalculator;
+            LoanCalculator = loanCalculator;
         }
 
         public List<ChartSeries> Series => new List<ChartSeries>()
@@ -23,16 +23,16 @@ namespace Financr.Utils
 
         public ChartOptions Options => new ChartOptions()
         {
-            YAxisTicks = 10000,
+            YAxisTicks = this.LoanCalculator.IsMortgage ? 10000 : 500,
             MaxNumYAxisTicks = 10,
             YAxisLines = true,
-            XAxisLines = true,
+            XAxisLines = true
         };
 
         private double[] BuildBalanceSeries()
         {
-            List<decimal> balance = new List<decimal> { this.MortgageCalculator.MortgageAmount };
-            balance.AddRange(this.MortgageCalculator.AmortizationSchedule.YearlyStatements.Select(x => x.EndingBalance));
+            List<decimal> balance = new List<decimal> { this.LoanCalculator.MortgageAmount };
+            balance.AddRange(this.LoanCalculator.AmortizationSchedule.YearlyStatements.Select(x => x.EndingBalance));
 
             return Array.ConvertAll(balance.ToArray(), x => (double)x);
         }
@@ -42,7 +42,7 @@ namespace Financr.Utils
             IList<decimal> debtPaid = new List<decimal>();
             decimal runningTotalDebt = 0;
             debtPaid.Add(runningTotalDebt);
-            foreach (var yearlyStatement in this.MortgageCalculator.AmortizationSchedule.YearlyStatements)
+            foreach (var yearlyStatement in this.LoanCalculator.AmortizationSchedule.YearlyStatements)
             {
                 runningTotalDebt += yearlyStatement.Interest;
                 debtPaid.Add(runningTotalDebt);
@@ -55,9 +55,9 @@ namespace Financr.Utils
             IList<decimal> totalPayments = new List<decimal>();
             decimal runningTotalPayment = 0;
             totalPayments.Add(runningTotalPayment);
-            foreach (var yearlyStatement in this.MortgageCalculator.AmortizationSchedule.YearlyStatements)
+            foreach (var yearlyStatement in this.LoanCalculator.AmortizationSchedule.YearlyStatements)
             {
-                runningTotalPayment += MortgageCalculator.MonthlyPayment * 12;
+                runningTotalPayment += LoanCalculator.MonthlyPayment * 12;
                 totalPayments.Add(runningTotalPayment);
             }
             return Array.ConvertAll(totalPayments.ToArray(), x => (double)x);
@@ -65,7 +65,7 @@ namespace Financr.Utils
 
         private string[] BuildXAxisLabels()
         {
-            return Array.ConvertAll(this.MortgageCalculator.AmortizationSchedule.YearlyStatements.Select(x => x.Period).ToArray(), x => x.ToString());
+            return Array.ConvertAll(this.LoanCalculator.AmortizationSchedule.YearlyStatements.Select(x => x.Period).ToArray(), x => x.ToString());
         }
     }
 }

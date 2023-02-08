@@ -3,8 +3,9 @@
 namespace Financr.Utils
 {
 
-    public class MortgageCalculator
+    public class LoanCalculator
     {
+        public bool IsMortgage { get; set; }
         public decimal PurchasePrice { get; set; }
         public decimal Deposit { get; set; }
         public decimal MortgageAmount => this.PurchasePrice - Deposit;
@@ -13,8 +14,7 @@ namespace Financr.Utils
         public decimal MonthlyInterestRate => this.PercentageRate / 12;
         public int Years { get; set; }
         public int Months => this.Years * 12;
-        public decimal Lbtt => CalculateLbtt();
-        public decimal Ads => this.PurchasePrice / 100 * 6;
+        public decimal Lbtt => IsMortgage ? CalculateLbtt() : 0;
         public decimal Total => this.CalculateTotal();
         public AmortizationSchedule AmortizationSchedule => this.CalculateAmortization();
         public decimal MonthlyPayment => this.MonthlyMortgagePayments();
@@ -68,7 +68,7 @@ namespace Financr.Utils
                 return total;
             }
 
-            total = this.PurchasePrice + this.Lbtt + this.Ads;
+            total = this.PurchasePrice + this.Lbtt;
 
             return total;
         }
