@@ -1,7 +1,31 @@
 ﻿@page "/info"
+@using Plotly.Blazor.Traces.ScatterLib
 
 <PageTitle>Index</PageTitle>
 
-<MudText Typo="Typo.h3" GutterBottom="true">Hello, world!</MudText>
-<MudText Class="mb-8">Welcome to your new app, powered by MudBlazor!</MudText>
-<MudAlert Severity="Severity.Normal">You can find documentation and examples on our website here: <MudLink Href="https://mudblazor.com" Typo="Typo.body2" Color="Color.Inherit"><b>www.mudblazor.com</b></MudLink></MudAlert>
+<MudCard class="ma-2">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Amortization</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <PlotlyChart @bind-Config="config" @bind-Layout="layout" @bind-Data="data" @ref="chart" />
+    </MudCardContent>
+</MudCard>
+
+@code {
+    PlotlyChart chart;
+    Config config = new Config();
+    Layout layout = new Layout();
+    // Using of the interface IList is important for the event callback!
+    IList<ITrace> data = new List<ITrace>
+    {
+        new Scatter
+        {
+            Name = "ScatterTrace",
+            Mode = ModeFlag.Lines | ModeFlag.Markers,
+            Y = new List<object>{1,2,3,7,2,1,1,0,8,2}
+        }
+    };
+}
