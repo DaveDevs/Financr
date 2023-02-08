@@ -1,5 +1,9 @@
-﻿@page "/info"
+﻿@inject PlotlyGrapher Grapher
+@page "/info"
 @using Plotly.Blazor.Traces.ScatterLib
+@using Financr.Utils
+@using Microsoft.AspNetCore.Components
+
 
 <PageTitle>Index</PageTitle>
 
@@ -10,22 +14,13 @@
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
-        <PlotlyChart @bind-Config="config" @bind-Layout="layout" @bind-Data="data" @ref="chart" />
+        <PlotlyChart @bind-Config="Grapher.Config" @bind-Layout="Grapher.Layout" bind-Data="Grapher.Data" @ref="Grapher.Chart" />
     </MudCardContent>
 </MudCard>
 
 @code {
-    PlotlyChart chart;
-    Config config = new Config();
-    Layout layout = new Layout();
-    // Using of the interface IList is important for the event callback!
-    IList<ITrace> data = new List<ITrace>
+    protected override async void OnInitialized()
     {
-        new Scatter
-        {
-            Name = "ScatterTrace",
-            Mode = ModeFlag.Lines | ModeFlag.Markers,
-            Y = new List<object>{1,2,3,7,2,1,1,0,8,2}
-        }
-    };
+        await Grapher.BuildChart();
+    }
 }
