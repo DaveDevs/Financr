@@ -8,7 +8,7 @@ namespace Financr.Utils
     public class PlotlyGrapher
     {
         private IList<ITrace> _data;
-        private static string _hoverTemplate = "£ %{y:,.2f} <br> Year %{x}";
+        private static string _hoverTemplate = "£ %{y:,.2f} <br> Month %{x}";
 
         public LoanCalculator LoanCalculator { get; protected set; }
 
@@ -62,7 +62,7 @@ namespace Financr.Utils
         private IList<object> BuildBalanceSeries()
         {
             List<decimal> balance = new List<decimal> { this.LoanCalculator.MortgageAmount };
-            balance.AddRange(this.LoanCalculator.AmortizationSchedule.YearlyStatements.Select(x => x.EndingBalance.BankerRound()));
+            balance.AddRange(this.LoanCalculator.AmortizationSchedule.MonthlyStatements.Select(x => x.EndingBalance.BankerRound()));
 
             var foo = balance.Cast<object>().ToList();
             return foo;
@@ -73,7 +73,7 @@ namespace Financr.Utils
             IList<decimal> debtPaid = new List<decimal>();
             decimal runningTotalDebt = 0;
             debtPaid.Add(runningTotalDebt);
-            foreach (var yearlyStatement in this.LoanCalculator.AmortizationSchedule.YearlyStatements)
+            foreach (var yearlyStatement in this.LoanCalculator.AmortizationSchedule.MonthlyStatements)
             {
                 runningTotalDebt += yearlyStatement.Interest;
                 debtPaid.Add(runningTotalDebt.BankerRound());
@@ -87,9 +87,9 @@ namespace Financr.Utils
             IList<decimal> totalPayments = new List<decimal>();
             decimal runningTotalPayment = 0;
             totalPayments.Add(runningTotalPayment);
-            foreach (var yearlyStatement in this.LoanCalculator.AmortizationSchedule.YearlyStatements)
+            foreach (var yearlyStatement in this.LoanCalculator.AmortizationSchedule.MonthlyStatements)
             {
-                runningTotalPayment += LoanCalculator.MonthlyPayment * 12;
+                runningTotalPayment += LoanCalculator.MonthlyPayment;
                 totalPayments.Add(runningTotalPayment.BankerRound());
             }
             return totalPayments.Cast<object>().ToList();
