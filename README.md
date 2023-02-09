@@ -16,6 +16,7 @@ It'll calculate mortgage payments and render a graph for amortization.
  - MudBlazor
  - NUnit
  - FluentAssertions
+ - [Plotly.Blazor](https://github.com/LayTec-AG/Plotly.Blazor)
 
 # Running locally
 
@@ -25,4 +26,4 @@ Clone, open in VS and F5
 
 # Screenshot
 
-![image](https://user-images.githubusercontent.com/87719153/216975106-7c459680-4b7c-4239-b9e7-455d00c8210a.png)
+![image](https://user-images.githubusercontent.com/87719153/217836240-c28cea8b-77d7-4956-b0e0-6178c29b0e1a.png)
