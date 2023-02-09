@@ -1,6 +1,7 @@
-﻿@page "/"
+﻿@page "/PlotlyGraph"
 @inject LoanCalculator LoanCalc
 @inject LoanGrapher LoanGrapher
+@inject PlotlyGrapher PlotlyGrapher
 @using Microsoft.AspNetCore.Components
 @using System.Globalization
 @using Financr.Utils
@@ -71,12 +72,7 @@
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent Class="pa-0">
-        <MudChart ChartType="ChartType.Line"
-                  ChartSeries="@LoanGrapher.Series"
-                  XAxisLabels="@LoanGrapher.XAxisLabels"
-                  Width="100%"
-                  Style="max-height: 350px"
-                  ChartOptions="@LoanGrapher.Options"></MudChart>
+        <PlotlyChart Config="PlotlyGrapher.Config" Layout="PlotlyGrapher.Layout" Data="PlotlyGrapher.Data" @ref="PlotlyGrapher.Chart"/>
     </MudCardContent>
 </MudCard>
 
@@ -116,6 +112,13 @@
         LoanCalc.InterestRate= 4.64m;
         LoanCalc.Years = 25;
         LoanCalc.IsMortgage = true;
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        PlotlyGrapher.Chart.React();
+
+        base.OnAfterRender(firstRender);
     }
 
     protected override Task OnInitializedAsync()
