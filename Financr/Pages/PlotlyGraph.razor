@@ -72,7 +72,13 @@
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent Class="pa-0">
-        <PlotlyChart Config="PlotlyGrapher.Config" Layout="PlotlyGrapher.Layout" Data="PlotlyGrapher.Data" @ref="PlotlyGrapher.Chart"/>
+        <MudGrid Justify="Justify.Center">
+            <MudItem xs="12" md="8" lg="6">
+                <MudPaper>
+                    <PlotlyChart Config="PlotlyGrapher.Config" Layout="PlotlyGrapher.Layout" Data="PlotlyGrapher.Data" @ref="PlotlyGrapher.Chart"/>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
     </MudCardContent>
 </MudCard>
 
