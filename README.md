@@ -7,8 +7,12 @@ Demo deployed and [Hosted on github pages](https://davewhiteford.github.io/Finan
 Can be installed as a PWA.
 
 It can:
- - Calculate Loan/Mortgage payments and render a graph for amortization.
- - Calculate Savings/Pension returns, accounting for compound interest, monthly deposits and annual increases to monthly deposits.
+ - Calculate Loan/Mortgage payments and render a graph for amortization (using MudBlazor or Plotly charts)
+ - Calculate Savings/Pension returns:
+   - accounting for compound interest 
+   - monthly deposits 
+   - annual increases to monthly deposits.
+   - Render Graphs of this over time using MudBlazor or Plotly charts
 
 Heavily inspired by [House Price Calculator, here](https://github.com/aahendry/HousePriceCalculator)
 
