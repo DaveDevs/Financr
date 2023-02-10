@@ -6,9 +6,11 @@ Demo deployed and [Hosted on github pages](https://davewhiteford.github.io/Finan
 
 Can be installed as a PWA.
 
-Heavily inspired by [House Price Calculator, here](https://github.com/aahendry/HousePriceCalculator)
+It can:
+ - Calculate Loan/Mortgage payments and render a graph for amortization.
+ - Calculate Savings/Pension returns, accounting for compound interest, monthly deposits and annual increases to monthly deposits.
 
-It'll calculate mortgage payments and render a graph for amortization.
+Heavily inspired by [House Price Calculator, here](https://github.com/aahendry/HousePriceCalculator)
 
 # Tech
  - Net7
