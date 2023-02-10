@@ -20,7 +20,7 @@ namespace Financr.Utils
             Config = new Config(){ AutoSizable = true, Responsive = true };
             Layout = new Layout()
             {
-                BarMode = BarModeEnum.Stack,
+                BarMode = BarModeEnum.Overlay,
                 Margin = new Margin(){AutoExpand = false, B=20,L=50,R=10,T=10}
             };
         }
@@ -37,17 +37,17 @@ namespace Financr.Utils
         public IList<ITrace> BuildChart()
         {
             _data.Clear();
-            _data.Add(new Bar()
-            {
-                Name = "Deposited",
-                Y = BuildDepositsSeries(),
-                HoverInfo = Plotly.Blazor.Traces.BarLib.HoverInfoFlag.Y,
-                HoverTemplate = _hoverTemplate,
-            });
             _data.Add(new Bar
             {
                 Name = "Pot",
                 Y = BuildPotSeries(),
+                HoverInfo = Plotly.Blazor.Traces.BarLib.HoverInfoFlag.Y,
+                HoverTemplate = _hoverTemplate,
+            });
+            _data.Add(new Bar()
+            {
+                Name = "Deposited",
+                Y = BuildDepositsSeries(),
                 HoverInfo = Plotly.Blazor.Traces.BarLib.HoverInfoFlag.Y,
                 HoverTemplate = _hoverTemplate,
             });
