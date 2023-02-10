@@ -95,13 +95,5 @@ namespace Financr.Utils
             return totalPayments.Cast<object>().ToList();
         }
     }
-
-    public static class DecimalUtils
-    {
-        public static decimal BankerRound(this decimal foo)
-        {
-            return decimal.Round(foo, 2, MidpointRounding.AwayFromZero);
-        }
-    }
 }
  

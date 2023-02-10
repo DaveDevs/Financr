@@ -12,6 +12,8 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddScoped<PlotlyGrapher>();
 builder.Services.AddScoped<LoanCalculator>();
 builder.Services.AddScoped<LoanGrapher>();
+builder.Services.AddScoped<SavingsCalculator>();
+builder.Services.AddScoped<SavingsGrapher>();
 builder.Services.AddMudServices();
 
 await builder.Build().RunAsync();
