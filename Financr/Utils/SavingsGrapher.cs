@@ -18,6 +18,13 @@ namespace Financr.Utils
             new ChartSeries() { Name = "Pot", Data = this.BuildDebtSeries() },
         };
 
+        public List<ChartSeries> PlotlySeries => new List<ChartSeries>()
+        {
+            new ChartSeries() { Name = "Deposits", Data = this.BuildDepositsSeries() },
+            new ChartSeries() { Name = "Pot", Data = this.BuildDebtSeries() },
+        };
+
+
         public string[] XAxisLabels => this.BuildXAxisLabels();
 
         public ChartOptions Options => new ChartOptions()
@@ -40,7 +47,7 @@ namespace Financr.Utils
 
         private string[] BuildXAxisLabels()
         {
-            return new string[]{};//Array.ConvertAll(this.SavingsCalculator.AmortizationSchedule.YearlyStatements.Select(x => x.Period).ToArray(), x => x.ToString());
+            return Enumerable.Range(1, this.SavingsCalculator.TotalMonths).Select(x => x.ToString()).ToArray();
         }
     }
 }

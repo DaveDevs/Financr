@@ -14,6 +14,7 @@ builder.Services.AddScoped<LoanCalculator>();
 builder.Services.AddScoped<LoanGrapher>();
 builder.Services.AddScoped<SavingsCalculator>();
 builder.Services.AddScoped<SavingsGrapher>();
+builder.Services.AddScoped<PlotlySavingsGrapher>();
 builder.Services.AddMudServices();
 
 await builder.Build().RunAsync();

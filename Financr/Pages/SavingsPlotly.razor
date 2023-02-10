@@ -1,0 +1,110 @@
+﻿@page "/savingsPlotly"
+@inject SavingsCalculator SavingsCalc
+@inject PlotlySavingsGrapher PlotlySavingsGrapher
+@using Microsoft.AspNetCore.Components
+@using System.Globalization
+@using Financr.Utils
+
+<PageTitle>Pension / Savings Calc</PageTitle>
+
+<MudCard class="ma-2">
+    <MudCardContent>
+        <MudGrid>
+            <MudItem xs=6 md=3>
+                <MudNumericField Label="Starting Balance" Min="0" Step="500" Format="N2" Culture="@enGb" T="decimal" @bind-Value="SavingsCalc.StartingBalance" HelperText="@SavingsCalc.StartingBalance.ToString()" />
+            </MudItem>
+            <MudItem xs=6 md=3>
+                <MudNumericField Label="Annual Return" Min="0" Step="0.01m" Format="N2" Culture="@enGb" T="decimal" @bind-Value="SavingsCalc.ExpectedAnnualReturn" />
+            </MudItem>
+            <MudItem xs=6 md=3>
+                <MudNumericField Label="Monthly Deposit" Min="0" Step="10" Format="N2" Culture="@enGb" T="decimal" @bind-Value="SavingsCalc.ExpectedMonthlyDeposit" HelperText="@SavingsCalc.ExpectedMonthlyDeposit.ToString()" />
+            </MudItem>
+            <MudItem xs=6 md=3>
+                <MudNumericField Label="Deposit Increase" Min="0" Step="0.01m" Format="N2" Culture="@enGb" T="decimal" @bind-Value="SavingsCalc.ExpectedMonthlyDepositIncrease" />
+            </MudItem>
+        </MudGrid>
+        <MudGrid>
+            <MudItem xs=6 md=3>
+                <MudNumericField Label="Years" Min="1" Step="1" Max="100" @bind-Value="SavingsCalc.Years"/>
+            </MudItem>
+            <MudItem xs=6 md=3>
+                <MudNumericField Label="Months" Min="1" Step="1" Max="100" @bind-Value="SavingsCalc.Months"/>
+            </MudItem>
+        </MudGrid>
+    </MudCardContent>
+</MudCard>
+
+<MudCard class="ma-2">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Breakdown</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudGrid>
+            <MudItem xs=6 md=3>
+                <MudField Class="ma-1" Label="Expected Total" Variant="Variant.Filled">£@SavingsCalc.Pot.Last().BankerRound()</MudField>
+            </MudItem>
+            <MudItem xs=6 md=3>
+                <MudField Class="ma-1" Label="Amount Deposited" Variant="Variant.Filled">£@(SavingsCalc.Deposits.Last().BankerRound())</MudField>
+            </MudItem>
+            <MudItem xs=6 md=3>
+                    <MudField Class="ma-1" Label="Yield" Variant="Variant.Filled">£@((SavingsCalc.Pot.Last() - SavingsCalc.Deposits.Last()).BankerRound())</MudField>
+            </MudItem>
+        </MudGrid>
+    </MudCardContent>
+</MudCard>
+
+<MudCard class="ma-2">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Returns over time</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+        <MudCardContent Class="pa-0">
+            <MudGrid Justify="Justify.Center">
+                <MudItem xs="12" md="8" lg="6">
+                    <MudPaper>
+                        <PlotlyChart Config="PlotlySavingsGrapher.Config" Layout="PlotlySavingsGrapher.Layout" Data="PlotlySavingsGrapher.Data" @ref="PlotlySavingsGrapher.Chart" />
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
+        </MudCardContent>
+</MudCard>
+
+@*<MudTable class="ma-1" Dense="true" Striped="true" Items="@SavingsCalc.AmortizationSchedule.YearlyStatements" Hover="true" Breakpoint="Breakpoint.None" LoadingProgressColor="Color.Info">
+    <HeaderContent>
+        <MudTh>Year</MudTh>
+        <MudTh>Start Balance</MudTh>
+        <MudTh>Interest</MudTh>
+        <MudTh>Principal</MudTh>
+        <MudTh>Ending Balance</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Year">@context.Period</MudTd>
+        <MudTd DataLabel="Start Balance">@AmortizationStatement.FormatDecimal(context.StartBalance)</MudTd>
+        <MudTd DataLabel="Interest">@AmortizationStatement.FormatDecimal(context.Interest)</MudTd>
+        <MudTd DataLabel="Principal">@AmortizationStatement.FormatDecimal(context.Principal)</MudTd>
+        <MudTd DataLabel="Ending Balance">@AmortizationStatement.FormatDecimal(context.EndingBalance)</MudTd>
+    </RowTemplate>
+</MudTable>*@
+
+@code {
+    public CultureInfo enGb = CultureInfo.GetCultureInfo("en-GB");
+
+    protected void Setup()
+    {
+        SavingsCalc.StartingBalance = 5_000;
+        SavingsCalc.ExpectedAnnualReturn = 4.5m;
+        SavingsCalc.ExpectedMonthlyDeposit = 300;
+        SavingsCalc.ExpectedMonthlyDepositIncrease = 4m;
+        SavingsCalc.Years = 30;
+        SavingsCalc.Months = 0;
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        this.Setup();
+        return Task.CompletedTask;
+    }
+}

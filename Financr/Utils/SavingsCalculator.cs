@@ -8,19 +8,20 @@
         public decimal ExpectedMonthlyDepositIncrease { get; set; }
         public int Months { get; set; }
         public int Years { get; set; }
+        public int TotalMonths => this.Years * 12 + Months;
 
         public IEnumerable<Decimal> Pot => 
             MathHelpers.CompoundInterest(
                 this.StartingBalance, 
                 this.ExpectedAnnualReturn,
                 this.ExpectedMonthlyDeposit, 
-                this.ExpectedMonthlyDepositIncrease).Take(this.Years * 12 + Months);
+                this.ExpectedMonthlyDepositIncrease).Take(this.TotalMonths);
         public IEnumerable<Decimal> Deposits =>
             MathHelpers.CompoundInterest(
                 this.StartingBalance,
                 0,
                 this.ExpectedMonthlyDeposit,
-                this.ExpectedMonthlyDepositIncrease).Take(this.Years * 12 + Months);
+                this.ExpectedMonthlyDepositIncrease).Take(this.TotalMonths);
     }
 
     public static class MathHelpers
