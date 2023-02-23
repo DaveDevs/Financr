@@ -28,13 +28,13 @@ jobs:
       run: dotnet test --no-build --verbosity normal
 
     - name: Substitute base href
-      run: sed -i 's/base href="\/"/base href="\/${{ github.event.repository.name }}\/"/' ${{ project_path }}/wwwroot/index.html
+      run: sed -i 's/base href="\/"/base href="\/${{ github.event.repository.name }}\/"/' ${{ env.project_path }}/wwwroot/index.html
       shell: bash
     - name: Setup SPA 404 page redirection
       run: |
-        cp ${{ github.action_path }}/404.html ${{ project_path }}/wwwroot
-        cp ${{ github.action_path }}/redirect.js ${{ project_path }}/wwwroot
-        sed -i '/blazor.webassembly.js/i \    <script src="redirect.js"><\/script>' ${{ project_path }}/wwwroot/index.html
+        cp ${{ github.action_path }}/404.html ${{ env.project_path }}/wwwroot
+        cp ${{ github.action_path }}/redirect.js ${{ env.project_path }}/wwwroot
+        sed -i '/blazor.webassembly.js/i \    <script src="redirect.js"><\/script>' ${{ env.project_path }}/wwwroot/index.html
       shell: bash
     - name: Publish application
       run: dotnet publish -c Release -o ${{ runner.temp }}/${{ github.action }}
