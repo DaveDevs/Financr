@@ -32,8 +32,6 @@ jobs:
       shell: bash
     - name: Setup SPA 404 page redirection
       run: |
-        cp ${{ github.action_path }}/404.html ${{ env.project_path }}/wwwroot
-        cp ${{ github.action_path }}/redirect.js ${{ env.project_path }}/wwwroot
         sed -i '/blazor.webassembly.js/i \    <script src="redirect.js"><\/script>' ${{ env.project_path }}/wwwroot/index.html
       shell: bash
     - name: Publish application
