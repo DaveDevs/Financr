@@ -1,4 +1,5 @@
-name: Build & Test
+name: Build & Deploy
+
 on:
   push:
     branches: [ main ]  
@@ -24,20 +25,8 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
 
-    - name: Publish app
-      run: dotnet publish -c Release
-
-    - name: Rewrite base href
-      uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
+    - uses: proulxsamuel/deploy-blazor-to-gh-pages@master
       with:
-        html_path: ${{ env.PUBLISH_DIR }}/index.html
-        base_href: /Financr/
-
-    - name: GitHub Pages
-      if: success()
-      uses: crazy-max/ghaction-github-pages@v1.5.1
-      with:
-        target_branch: gh-pages
-        build_dir: ${{ env.PUBLISH_DIR }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # The path to the Blazor project in the repository.
+        # Default: '.'
+        project_path: 'Financr'   
