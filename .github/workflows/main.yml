@@ -36,7 +36,6 @@ jobs:
       shell: bash
     - name: Publish application
       run: dotnet publish -c Release -o ${{ runner.temp }}/${{ github.action }}
-      shell: bash
     - name: Create gh-pages branch
       run: |
         git checkout --orphan gh-pages
