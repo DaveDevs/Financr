@@ -1,5 +1,11 @@
 name: Deploy to GitHub Pages
 # Run workflow on every push to the master branch
+
+inputs:
+  project_path:
+    description: 'The path to the Blazor project'
+    required: false
+    default: 'Financr'
 on:
   push:
     branches: [ main ]  
@@ -30,4 +36,44 @@ jobs:
       with:
         # The path to the Blazor project in the repository.
         # Default: '.'
-        project_path: 'Financr'   
+        project_path: '${{ inputs.project_path }}'   
+
+
+name: 'Deploy Blazor to GitHub Pages'
+description: 'Build a Blazor Wasm application and deploy it to GitHub Pages.'
+inputs:
+  project_path:
+    description: 'The path to the Blazor project'
+    required: false
+    default: '.'
+runs:
+  using: "composite"
+  steps:
+    - name: Substitute base href
+      run: sed -i 's/base href="\/"/base href="\/${{ github.event.repository.name }}\/"/' ${{ inputs.project_path }}/wwwroot/index.html
+      shell: bash
+    - name: Setup SPA 404 page redirection
+      run: |
+        cp ${{ github.action_path }}/404.html ${{ inputs.project_path }}/wwwroot
+        cp ${{ github.action_path }}/redirect.js ${{ inputs.project_path }}/wwwroot
+        sed -i '/blazor.webassembly.js/i \    <script src="redirect.js"><\/script>' ${{ inputs.project_path }}/wwwroot/index.html
+      shell: bash
+    - name: Publish application
+      run: dotnet publish -c Release -o ${{ runner.temp }}/${{ github.action }}
+      shell: bash
+    - name: Create gh-pages branch
+      run: |
+        git checkout --orphan gh-pages
+        git clean -fdx
+        git rm -rf .
+        cp -r ${{ runner.temp }}/${{ github.action }}/wwwroot/. .
+        touch .nojekyll
+      shell: bash
+    - name: Commit and push
+      run: |
+        git add .
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git commit -m 'Deploy application to GitHub Pages'
+        git push -f -u origin gh-pages
+      shell: bash
