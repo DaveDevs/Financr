@@ -1,6 +1,4 @@
-name: Deploy to GitHub Pages
-env:
-  project_path: 'Financr'
+name: Build & Test
 on:
   push:
     branches: [ main ]  
@@ -26,29 +24,20 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
 
-    - name: Substitute base href
-      run: sed -i 's/base href="\/"/base href="\/${{ github.event.repository.name }}\/"/' ${{ env.project_path }}/wwwroot/index.html
-      shell: bash
-    - name: Setup SPA 404 page redirection
-      run: |
-        sed -i '/blazor.webassembly.js/i \    <script src="redirect.js"><\/script>' ${{ env.project_path }}/wwwroot/index.html
-      shell: bash
-    - name: Publish application
-      run: dotnet publish -c Release --property:PublishDir=${{ runner.temp }}/${{ github.action }}
-      shell: bash
-    - name: Create gh-pages branch
-      run: |
-        git checkout --orphan gh-pages
-        git clean -fdx
-        git rm -rf .
-        cp -r ${{ runner.temp }}/${{ github.action }}/wwwroot/. .
-        touch .nojekyll
-      shell: bash
-    - name: Commit and push
-      run: |
-        git add .
-        git config user.name github-actions
-        git config user.email github-actions@github.com
-        git commit -m 'Deploy application to GitHub Pages'
-        git push -f -u origin gh-pages
-      shell: bash
+    - name: Publish app
+      run: dotnet publish -c Release
+
+    - name: Rewrite base href
+      uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
+      with:
+        html_path: ${{ env.PUBLISH_DIR }}/index.html
+        base_href: /Financr/
+
+    - name: GitHub Pages
+      if: success()
+      uses: crazy-max/ghaction-github-pages@v1.5.1
+      with:
+        target_branch: gh-pages
+        build_dir: ${{ env.PUBLISH_DIR }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }
