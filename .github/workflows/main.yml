@@ -25,7 +25,7 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
 
-    - uses: proulxsamuel/deploy-blazor-to-gh-pages@master
+    - uses: DaveDevs/deploy-blazor-to-gh-pages@master
       with:
         # The path to the Blazor project in the repository.
         # Default: '.'
