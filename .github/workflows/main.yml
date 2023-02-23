@@ -26,7 +26,6 @@ jobs:
 
     - name: Test
       run: dotnet test --no-build --verbosity normal
-      run: dotnet test --no-build --verbosity normal
 
     - name: Substitute base href
       run: sed -i 's/base href="\/"/base href="\/${{ github.event.repository.name }}\/"/' ${{ $project_path }}/wwwroot/index.html
