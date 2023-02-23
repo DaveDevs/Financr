@@ -102,6 +102,13 @@
         SavingsCalc.Months = 0;
     }
 
+    protected override void OnAfterRender(bool firstRender)
+    {
+        PlotlySavingsGrapher.Chart.React();
+
+        base.OnAfterRender(firstRender);
+    }
+
     protected override Task OnInitializedAsync()
     {
         this.Setup();
