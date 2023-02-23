@@ -38,17 +38,6 @@ jobs:
         # Default: '.'
         project_path: '${{ inputs.project_path }}'   
 
-
-name: 'Deploy Blazor to GitHub Pages'
-description: 'Build a Blazor Wasm application and deploy it to GitHub Pages.'
-inputs:
-  project_path:
-    description: 'The path to the Blazor project'
-    required: false
-    default: '.'
-runs:
-  using: "composite"
-  steps:
     - name: Substitute base href
       run: sed -i 's/base href="\/"/base href="\/${{ github.event.repository.name }}\/"/' ${{ inputs.project_path }}/wwwroot/index.html
       shell: bash
