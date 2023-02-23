@@ -16,7 +16,6 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '7.0.102'
-        include-prerelease: true
 
     - name: Restore dependencies
       run: dotnet restore
@@ -35,7 +34,7 @@ jobs:
         sed -i '/blazor.webassembly.js/i \    <script src="redirect.js"><\/script>' ${{ env.project_path }}/wwwroot/index.html
       shell: bash
     - name: Publish application
-      run: dotnet publish -c Release -o ${{ runner.temp }}/${{ github.action }}
+      run: dotnet publish -c Release --property:PublishDir=${{ runner.temp }}/${{ github.action }}
     - name: Create gh-pages branch
       run: |
         git checkout --orphan gh-pages
