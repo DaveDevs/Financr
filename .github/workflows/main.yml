@@ -26,12 +26,7 @@ jobs:
 
     - name: Test
       run: dotnet test --no-build --verbosity normal
-
-    - uses: proulxsamuel/deploy-blazor-to-gh-pages@master
-      with:
-        # The path to the Blazor project in the repository.
-        # Default: '.'
-        project_path: '${{ $project_path }}'   
+      run: dotnet test --no-build --verbosity normal
 
     - name: Substitute base href
       run: sed -i 's/base href="\/"/base href="\/${{ github.event.repository.name }}\/"/' ${{ $project_path }}/wwwroot/index.html
