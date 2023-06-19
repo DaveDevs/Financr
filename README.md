@@ -1,8 +1,8 @@
 # Readme
 
-[![Deploy to GitHub Pages](https://github.com/davewhiteford/Financr/actions/workflows/main.yml/badge.svg)](https://github.com/davewhiteford/Financr/actions/workflows/main.yml)
+[![Deploy to GitHub Pages](https://github.com/davedevs/Financr/actions/workflows/main.yml/badge.svg)](https://github.com/davedevs/Financr/actions/workflows/main.yml)
 
-Demo deployed and [Hosted on github pages](https://davewhiteford.github.io/Financr/).
+Demo deployed and [Hosted on github pages](https://davedevs.github.io/Financr/).
 
 Can be installed as a PWA.
 
